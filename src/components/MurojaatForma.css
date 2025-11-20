@@ -1,0 +1,248 @@
+.murojaat-forma-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.murojaat-forma {
+  background: white;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+}
+
+.success-message {
+  background: #f5f5f5;
+  border: 1px solid #666666;
+  color: #333333;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+.error-message {
+  background: #fff5f5;
+  border: 1px solid #ff6b6b;
+  color: #cc0000;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 2px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333333;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.required {
+  color: #666666;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cccccc;
+  background: white;
+  color: #333333;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 2px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="tel"]:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #666666;
+  box-shadow: 0 0 0 2px rgba(102, 102, 102, 0.1);
+}
+
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  padding-right: 36px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.form-actions {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.submit-button {
+  background: #333333;
+  color: white;
+  border: 1px solid #333333;
+  padding: 12px 32px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 2px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.submit-button:hover {
+  background: #444444;
+  border-color: #444444;
+}
+
+.submit-button:active {
+  transform: translateY(1px);
+  background: #2a2a2a;
+}
+
+.submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 102, 102, 0.2);
+}
+
+.submit-button:disabled {
+  background: #666666;
+  border-color: #666666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.submit-button:disabled:hover {
+  background: #666666;
+  border-color: #666666;
+}
+
+/* Mobile phones (up to 480px) */
+@media (max-width: 480px) {
+  .murojaat-forma-container {
+    padding: 0;
+  }
+
+  .murojaat-forma {
+    padding: 16px;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    margin-bottom: 5px;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="tel"],
+  .form-group select,
+  .form-group textarea {
+    padding: 10px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    border: 1px solid #cccccc;
+  }
+
+  .form-group select {
+    padding-right: 32px;
+    background-position: right 10px center;
+  }
+
+  .form-group textarea {
+    min-height: 90px;
+  }
+
+  .submit-button {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 24px;
+    font-size: 13px;
+  }
+
+  .success-message {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
+
+/* Tablet */
+@media (min-width: 481px) and (max-width: 768px) {
+  .murojaat-forma {
+    padding: 24px;
+  }
+
+  .form-group {
+    margin-bottom: 22px;
+  }
+
+  .submit-button {
+    max-width: 280px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .murojaat-forma {
+    padding: 32px;
+  }
+
+  .form-group {
+    margin-bottom: 24px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="tel"],
+  .form-group select,
+  .form-group textarea {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .form-group textarea {
+    min-height: 120px;
+  }
+
+  .submit-button {
+    max-width: 320px;
+    padding: 14px 36px;
+    font-size: 15px;
+  }
+}
+

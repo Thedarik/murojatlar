@@ -1,0 +1,110 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #333333;
+}
+
+.app-header {
+  background: #333333;
+  color: #ffffff;
+  padding: 24px 16px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.app-main {
+  flex: 1;
+  padding: 24px 16px;
+  background: #fafafa;
+}
+
+.app-footer {
+  background: #333333;
+  color: #ffffff;
+  padding: 16px;
+  text-align: center;
+  font-size: 11px;
+  box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.app-footer p {
+  margin: 0;
+  opacity: 0.85;
+}
+
+/* Tablet */
+@media (min-width: 481px) {
+  .app-header {
+    padding: 28px 20px;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .app-main {
+    padding: 32px 20px;
+  }
+
+  .app-footer {
+    padding: 18px;
+    font-size: 12px;
+  }
+}
+
+/* Desktop */
+@media (min-width: 769px) {
+  .app-header {
+    padding: 32px 24px;
+  }
+
+  .app-header h1 {
+    font-size: 26px;
+    letter-spacing: 1.5px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .app-main {
+    padding: 40px 24px;
+  }
+
+  .app-footer {
+    padding: 20px;
+    font-size: 12px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1025px) {
+  .app-header h1 {
+    font-size: 28px;
+  }
+}
+
