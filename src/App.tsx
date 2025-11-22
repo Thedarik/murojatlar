@@ -1,25 +1,26 @@
-import MurojaatForma from './components/MurojaatForma'
-import LanguageSwitcher from './components/LanguageSwitcher'
-import { useLanguage } from './contexts/LanguageContext'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import Home from './pages/Home'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
-  const { t } = useLanguage()
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <LanguageSwitcher />
-        <h1>{t.header.title}</h1>
-        <p className="subtitle">{t.header.subtitle}</p>
-      </header>
-      <main className="app-main">
-        <MurojaatForma />
-      </main>
-      <footer className="app-footer">
-        <p>{t.footer.copyright}</p>
-      </footer>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

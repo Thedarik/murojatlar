@@ -39,6 +39,7 @@ npm run build
 
 ## Xususiyatlar
 
+### Foydalanuvchi qismi
 - React + TypeScript
 - Supabase integratsiyasi (ma'lumotlarni saqlash)
 - Uchta til variantlari: O'zbek (Lotin), O'zbek (Kiril), Rus
@@ -47,6 +48,32 @@ npm run build
 - Barcha kerakli formalar maydonlari
 - Loading va error handling
 - Form validatsiyasi
+
+### Admin Panel
+- Admin autentifikatsiya (login/logout)
+- Murojaatlarni ko'rish va boshqarish
+- Qidirish funksiyasi (F.I.SH, telefon, mazmun bo'yicha)
+- Filtrlash (tuman/shahar va tashkilot bo'yicha)
+- Murojaatlarni o'chirish
+- To'liq responsive admin panel
+- Protected routes (faqat autentifikatsiya qilingan adminlar kirishi mumkin)
+
+## Admin Panel
+
+### Kirish
+Admin panelga kirish uchun: `http://localhost:5173/admin/login`
+
+**Default login ma'lumotlari:**
+- Username: `admin`
+- Password: `admin123`
+
+⚠️ **Muhim**: Production uchun parolni o'zgartirish va xavfsiz autentifikatsiya (masalan, Supabase Auth) ishlatish tavsiya etiladi.
+
+### Admin Panel Funksiyalari
+1. **Murojaatlarni ko'rish** - Barcha murojaatlarni jadval ko'rinishida ko'rish
+2. **Qidirish** - F.I.SH, telefon yoki murojaat mazmuni bo'yicha qidirish
+3. **Filtrlash** - Tuman/shahar yoki tashkilot bo'yicha filtrlash
+4. **O'chirish** - Keraksiz murojaatlarni o'chirish
 
 ## Supabase Konfiguratsiya
 
