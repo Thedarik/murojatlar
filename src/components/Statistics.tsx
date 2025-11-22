@@ -181,9 +181,10 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry: { name: string; percent?: number }) => {
-                  const percent = entry.percent || 0
-                  return percent > 5 ? `${entry.name}: ${(percent * 100).toFixed(1)}%` : ''
+                label={(props: any) => {
+                  const percent = props.percent || 0
+                  const name = props.name || ''
+                  return percent > 0.05 ? `${name}: ${(percent * 100).toFixed(1)}%` : ''
                 }}
                 outerRadius={100}
                 fill="#8884d8"
