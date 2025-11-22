@@ -61,7 +61,13 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
     murojaatlar.forEach(murojaat => {
       if (murojaat.created_at) {
         const date = new Date(murojaat.created_at)
-        const timestamp = date.setHours(0, 0, 0, 0) // Kun boshiga
+        // Invalid date tekshiruvi
+        if (isNaN(date.getTime())) {
+          return
+        }
+        // Kun boshiga o'tkazish
+        date.setHours(0, 0, 0, 0)
+        const timestamp = date.getTime()
         const dateKey = date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
           month: 'short',
           day: 'numeric'
@@ -175,7 +181,7 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={(entry: any) => {
+                label={(entry: { name: string; percent?: number }) => {
                   const percent = entry.percent || 0
                   return percent > 5 ? `${entry.name}: ${(percent * 100).toFixed(1)}%` : ''
                 }}

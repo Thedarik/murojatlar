@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { supabase, Murojaat } from '../config/supabase'
@@ -86,11 +86,7 @@ function AdminDashboard() {
 
   const t = translations[language]
 
-  useEffect(() => {
-    loadMurojaatlar()
-  }, [])
-
-  const loadMurojaatlar = async () => {
+  const loadMurojaatlar = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -107,7 +103,11 @@ function AdminDashboard() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [t.error])
+
+  useEffect(() => {
+    loadMurojaatlar()
+  }, [loadMurojaatlar])
 
   const handleDelete = async (id: number) => {
     if (!window.confirm(t.confirmDelete)) return
@@ -148,6 +148,10 @@ function AdminDashboard() {
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return '-'
     const date = new Date(dateString)
+    // Invalid date tekshiruvi
+    if (isNaN(date.getTime())) {
+      return '-'
+    }
     return date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
       year: 'numeric',
       month: '2-digit',

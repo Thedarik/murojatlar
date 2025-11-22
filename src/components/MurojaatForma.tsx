@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react'
+import { useState, FormEvent, useEffect, useRef } from 'react'
 import { useLanguage } from '../contexts/LanguageContext'
 import { supabase, Murojaat } from '../config/supabase'
 import './MurojaatForma.css'
@@ -26,6 +26,7 @@ function MurojaatForma() {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -93,7 +94,11 @@ function MurojaatForma() {
       })
 
       // 3 soniyadan keyin success xabarni yashirish
-      setTimeout(() => {
+      // Oldingi timeout'ni tozalash
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
         setSubmitted(false)
       }, 3000)
 
@@ -136,6 +141,15 @@ function MurojaatForma() {
       setLoading(false)
     }
   }
+
+  // Cleanup timeout component unmount bo'lganda
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
   return (
     <div className="murojaat-forma-container">
