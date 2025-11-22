@@ -92,3 +92,29 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
+## Vercel'ga Deploy Qilish
+
+### 1. GitHub'ga yuklash
+```bash
+git add .
+git commit -m "Deploy to Vercel"
+git push origin main
+```
+
+### 2. Vercel'da sozlash
+1. [Vercel](https://vercel.com) saytiga kiring
+2. GitHub repository'ni import qiling
+3. **Environment Variables** qo'shing:
+   - `VITE_SUPABASE_URL` - Supabase URL
+   - `VITE_SUPABASE_ANON_KEY` - Supabase Anon Key
+4. **Build Settings**:
+   - Framework Preset: `Vite`
+   - Build Command: `npm run build` (avtomatik)
+   - Output Directory: `dist` (avtomatik)
+5. Deploy tugmasini bosing
+
+### 3. Vercel.json
+Loyihada `vercel.json` fayli mavjud bo'lib, u SPA routing'ni to'g'ri sozlaydi.
+
+**Muhim**: Vercel'da environment variables'ni sozlashni unutmang!
+
