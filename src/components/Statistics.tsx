@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, LabelList } from 'recharts'
 import { Murojaat } from '../config/supabase'
 import './Statistics.css'
+import { normalizeByLanguage } from '../utils/transliteration'
 
 interface StatisticsProps {
   murojaatlar: Murojaat[]
@@ -11,6 +12,7 @@ interface StatisticsProps {
 }
 
 const COLORS = ['#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe', '#eff6ff']
+const STATUS_COLORS = ['#1e3a8a', '#3b82f6', '#93c5fd']
 
 function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilter }: StatisticsProps) {
   const translations = {
@@ -50,42 +52,57 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
 
   // Tashkilotlar ro'yxati
   const tashkilotlar = useMemo(() => {
-    const unique = Array.from(new Set(murojaatlar.map(m => m.tashkilot))).filter(Boolean)
-    return unique
-  }, [murojaatlar])
-
-  // Kunlar kesimida statistika
-  const dailyStats = useMemo(() => {
-    const stats: Record<string, { count: number; timestamp: number }> = {}
-    
-    murojaatlar.forEach(murojaat => {
-      if (murojaat.created_at) {
-        const date = new Date(murojaat.created_at)
-        // Invalid date tekshiruvi
-        if (isNaN(date.getTime())) {
-          return
-        }
-        // Kun boshiga o'tkazish
-        date.setHours(0, 0, 0, 0)
-        const timestamp = date.getTime()
-        const dateKey = date.toLocaleDateString(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
-          month: 'short',
-          day: 'numeric'
-        })
-        
-        if (!stats[dateKey]) {
-          stats[dateKey] = { count: 0, timestamp }
-        }
-        stats[dateKey].count++
+    const unique = new Set<string>()
+    murojaatlar.forEach(m => {
+      if (!m.tashkilot) return
+      const normalized = normalizeByLanguage(m.tashkilot, language)
+      if (normalized) {
+        unique.add(normalized)
       }
     })
-
-    return Object.entries(stats)
-      .map(([date, data]) => ({ date, count: data.count, timestamp: data.timestamp }))
-      .sort((a, b) => a.timestamp - b.timestamp)
-      .slice(-30) // Oxirgi 30 kun
-      .map(({ date, count }) => ({ date, count }))
+    return Array.from(unique)
   }, [murojaatlar, language])
+
+  // Kunlar kesimida statistika
+  const monthNames = {
+    uz: ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyn', 'Iyul', 'Avg', 'Sen', 'Okt', 'Noy', 'Dek'],
+    'uz-cyrl': ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+    ru: ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек']
+  }
+
+  const dailyStats = useMemo(() => {
+    const dayCounts = new Map<string, number>()
+    
+    murojaatlar.forEach(murojaat => {
+      if (!murojaat.created_at) return
+
+        const date = new Date(murojaat.created_at)
+      if (isNaN(date.getTime())) return
+
+        date.setHours(0, 0, 0, 0)
+      const isoKey = date.toISOString().split('T')[0]
+      dayCounts.set(isoKey, (dayCounts.get(isoKey) || 0) + 1)
+    })
+
+    const monthLabels = monthNames[language] || monthNames.uz
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    return Array.from({ length: 30 }).map((_, idx) => {
+      const targetDate = new Date(today)
+      targetDate.setDate(today.getDate() - (29 - idx))
+      const isoKey = targetDate.toISOString().split('T')[0]
+
+      const formattedDate = `${targetDate.getDate()} ${monthLabels[targetDate.getMonth()]}`
+
+      return {
+        date: formattedDate,
+        count: dayCounts.get(isoKey) || 0
+      }
+    })
+  }, [murojaatlar, language])
+
+  const normalizeRegionName = (value: string) => normalizeByLanguage(value, language)
 
   // Xududlar kesimida statistika
   const regionStats = useMemo(() => {
@@ -93,7 +110,8 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
     
     murojaatlar.forEach(murojaat => {
       if (murojaat.tuman_shahar) {
-        stats[murojaat.tuman_shahar] = (stats[murojaat.tuman_shahar] || 0) + 1
+        const normalized = normalizeRegionName(murojaat.tuman_shahar)
+        stats[normalized] = (stats[normalized] || 0) + 1
       }
     })
 
@@ -104,17 +122,31 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
         ...item,
         percent: ((item.value / murojaatlar.length) * 100).toFixed(1)
       }))
-  }, [murojaatlar])
+  }, [murojaatlar, language])
 
   // Status bo'yicha statistika (hozircha barcha murojaatlar "jarayonda" deb hisoblanadi)
   const statusStats = useMemo(() => {
-    const total = murojaatlar.length
+    const total = murojaatlar.length || 1
     // Keyinchalik status maydoni qo'shilganda, bu yerda real statistika bo'ladi
     return [
       { name: t.resolved, value: Math.floor(total * 0.7) }, // 70% hal qilingan deb taxmin qilamiz
-      { name: t.inProgress, value: Math.floor(total * 0.3) } // 30% jarayonda
-    ]
+      { name: t.inProgress, value: Math.ceil(total * 0.3) } // 30% jarayonda
+    ].map(item => ({
+      ...item,
+      percent: Math.round((item.value / total) * 100)
+    }))
   }, [murojaatlar, t])
+
+  const renderStatusTooltip = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null
+    const data = payload[0].payload
+    return (
+      <div className="custom-tooltip">
+        <span className="tooltip-title">{data.name}</span>
+        <span className="tooltip-value">{data.value} ({data.percent}%)</span>
+      </div>
+    )
+  }
 
   return (
     <div className="statistics-container">
@@ -203,12 +235,35 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
         <div className="chart-card">
           <h3 className="chart-title">{t.byStatus}</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={statusStats}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
-              <Tooltip />
-              <Bar dataKey="value" fill="#1e3a8a" />
+            <BarChart
+              data={statusStats}
+              layout="vertical"
+              margin={{ top: 10, right: 20, bottom: 0, left: 10 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+              <XAxis
+                type="number"
+                tick={{ fontSize: 12 }}
+                domain={[0, (dataMax: number) => Math.ceil(dataMax / 10) * 10]}
+              />
+              <YAxis
+                dataKey="name"
+                type="category"
+                tick={{ fontSize: 12 }}
+                width={120}
+              />
+              <Tooltip content={renderStatusTooltip} />
+              <Bar dataKey="value" barSize={30} radius={[0, 12, 12, 0]}>
+                {statusStats.map((_, index) => (
+                  <Cell key={`status-${index}`} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
+                ))}
+                <LabelList
+                  dataKey="percent"
+                  position="right"
+                  formatter={(value: number) => `${value}%`}
+                  style={{ fill: '#1f2937', fontWeight: 600 }}
+                />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

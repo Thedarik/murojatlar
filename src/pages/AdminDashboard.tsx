@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import { supabase, Murojaat } from '../config/supabase'
 import Statistics from '../components/Statistics'
 import './AdminDashboard.css'
+import { normalizeByLanguage } from '../utils/transliteration'
 
 function AdminDashboard() {
   const { logout, username } = useAuth()
@@ -136,14 +137,25 @@ function AdminDashboard() {
       murojaat.murojaat_mazmuni.toLowerCase().includes(searchTerm.toLowerCase())
     
     const matchesTuman = filterTuman === '' || murojaat.tuman_shahar === filterTuman
-    const matchesTashkilot = filterTashkilot === '' || murojaat.tashkilot === filterTashkilot
+    const normalizedTashkilot = normalizeByLanguage(murojaat.tashkilot || '', language)
+    const matchesTashkilot = filterTashkilot === '' || normalizedTashkilot === filterTashkilot
 
     return matchesSearch && matchesTuman && matchesTashkilot
   })
 
   // Tumanlar va tashkilotlar ro'yxati
   const tumanlar = Array.from(new Set(murojaatlar.map(m => m.tuman_shahar))).filter(Boolean)
-  const tashkilotlar = Array.from(new Set(murojaatlar.map(m => m.tashkilot))).filter(Boolean)
+  const tashkilotlar = useMemo(() => {
+    const unique = new Set<string>()
+    murojaatlar.forEach(m => {
+      if (!m.tashkilot) return
+      const normalized = normalizeByLanguage(m.tashkilot, language)
+      if (normalized) {
+        unique.add(normalized)
+      }
+    })
+    return Array.from(unique)
+  }, [murojaatlar, language])
 
   const formatDate = (dateString: string | undefined) => {
     if (!dateString) return '-'
