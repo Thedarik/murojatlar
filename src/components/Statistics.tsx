@@ -49,6 +49,7 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
   }
 
   const t = translations[language]
+  const locale = language === 'ru' ? 'ru-RU' : 'uz-UZ'
 
   // Tashkilotlar ro'yxati
   const tashkilotlar = useMemo(() => {
@@ -115,14 +116,26 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
       }
     })
 
+    const total = Object.values(stats).reduce((sum, value) => sum + value, 0) || 1
     return Object.entries(stats)
-      .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .map((item) => ({
-        ...item,
-        percent: ((item.value / murojaatlar.length) * 100).toFixed(1)
+      .map(([name, value]) => ({
+        name,
+        value,
+        percent: Number(((value / total) * 100).toFixed(1))
       }))
+      .sort((a, b) => b.value - a.value)
   }, [murojaatlar, language])
+
+  const summaryStats = useMemo(() => {
+    const formatter = new Intl.NumberFormat(locale)
+    return [
+      {
+        label: t.total,
+        value: formatter.format(murojaatlar.length),
+        color: COLORS[0]
+      }
+    ]
+  }, [murojaatlar.length, t.total, locale])
 
   // Status bo'yicha statistika (hozircha barcha murojaatlar "jarayonda" deb hisoblanadi)
   const statusStats = useMemo(() => {
@@ -169,10 +182,17 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
         ))}
       </div>
 
-      {/* Jami statistika */}
-      <div className="total-stat">
-        <span className="total-label">{t.total}:</span>
-        <span className="total-value">{murojaatlar.length}</span>
+      {/* Umumiy statistika */}
+      <div className="summary-cards">
+        {summaryStats.map((item) => (
+          <div className="summary-card" key={item.label}>
+            <span className="summary-dot" style={{ backgroundColor: item.color }} />
+            <div className="summary-text">
+              <span className="summary-label">{item.label}</span>
+              <span className="summary-value">{item.value}</span>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Grafiklar */}
@@ -206,29 +226,55 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
         {/* Pie Chart - Xududlar kesimida */}
         <div className="chart-card">
           <h3 className="chart-title">{t.byRegion}</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={regionStats}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                label={(props: any) => {
-                  const percent = props.percent || 0
-                  const name = props.name || ''
-                  return percent > 0.05 ? `${name}: ${(percent * 100).toFixed(1)}%` : ''
-                }}
-                outerRadius={100}
-                fill="#8884d8"
-                dataKey="value"
-              >
-                {regionStats.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                ))}
-              </Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
+          <div className="pie-layout">
+            <div className="pie-chart">
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie
+                    data={regionStats}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={(props: any) => {
+                      const name = props.name || ''
+                      const payloadPercent = props.payload?.percent
+                      const percentValue = typeof payloadPercent === 'number'
+                        ? payloadPercent
+                        : (props.percent || 0) * 100
+                      if (percentValue < 5) return ''
+                      const formatter = new Intl.NumberFormat(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1
+                      })
+                      return `${name}: ${formatter.format(percentValue)}%`
+                    }}
+                    outerRadius={100}
+                    dataKey="value"
+                  >
+                    {regionStats.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="pie-legend">
+              {regionStats.map((region, index) => (
+                <div key={region.name} className="pie-legend-item">
+                  <span
+                    className="pie-legend-dot"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  />
+                  <span className="pie-legend-name">{region.name}</span>
+                  <span className="pie-legend-percent">
+                    {region.percent.toFixed(1)}%
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Bar Chart - Status bo'yicha */}

@@ -5,6 +5,7 @@ import { supabase, Murojaat } from '../config/supabase'
 import Statistics from '../components/Statistics'
 import './AdminDashboard.css'
 import { normalizeByLanguage } from '../utils/transliteration'
+import logImage from '../assets/log.png'
 
 function AdminDashboard() {
   const { logout, username } = useAuth()
@@ -176,7 +177,10 @@ function AdminDashboard() {
   return (
     <div className="admin-dashboard">
       <header className="admin-header">
-        <h1>{t.title}</h1>
+        <div className="admin-header-info">
+          <img src={logImage} alt="Logo" className="admin-header-logo" />
+          <h1>{t.title}</h1>
+        </div>
         <div className="admin-header-actions">
           <span className="admin-username">{username}</span>
           <button onClick={logout} className="logout-button">
