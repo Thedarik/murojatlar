@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import './AdminLogin.css'
+import logImage from '../assets/log.png'
 
 function AdminLogin() {
   const [username, setUsername] = useState('')
@@ -67,6 +68,7 @@ function AdminLogin() {
   return (
     <div className="admin-login-container">
       <div className="admin-login-box">
+        <img src={logImage} alt="Logo" className="login-logo" />
         <h1>{t.title}</h1>
         <p className="subtitle">{t.subtitle}</p>
         

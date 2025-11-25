@@ -2,6 +2,7 @@ import MurojaatForma from '../components/MurojaatForma'
 import LanguageSwitcher from '../components/LanguageSwitcher'
 import { useLanguage } from '../contexts/LanguageContext'
 import '../App.css'
+import logImage from '../assets/log.png'
 
 function Home() {
   const { t } = useLanguage()
@@ -10,6 +11,7 @@ function Home() {
     <div className="app">
       <header className="app-header">
         <LanguageSwitcher />
+        <img src={logImage} alt="Logo" className="header-logo" />
         <h1>{t.header.title}</h1>
         <p className="subtitle">{t.header.subtitle}</p>
       </header>

@@ -16,6 +16,14 @@
   max-width: 400px;
 }
 
+.login-logo {
+  max-width: 100px;
+  max-height: 70px;
+  margin: 0 auto 20px auto;
+  display: block;
+  object-fit: contain;
+}
+
 .admin-login-box h1 {
   margin: 0 0 8px 0;
   font-size: 24px;

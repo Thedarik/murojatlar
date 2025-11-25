@@ -15,6 +15,14 @@
   position: relative;
 }
 
+.header-logo {
+  max-width: 120px;
+  max-height: 80px;
+  margin: 0 auto 16px auto;
+  display: block;
+  object-fit: contain;
+}
+
 .app-header h1 {
   margin: 0;
   font-size: 22px;
