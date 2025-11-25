@@ -260,7 +260,7 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
                 <LabelList
                   dataKey="percent"
                   position="right"
-                  formatter={(value: number) => `${value}%`}
+                  formatter={(value: any) => `${value}%`}
                   style={{ fill: '#1f2937', fontWeight: 600 }}
                 />
               </Bar>
