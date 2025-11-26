@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { supabase, Murojaat } from '../config/supabase'
+import Statistics from '../components/Statistics'
 import './AdminDashboard.css'
 import { normalizeByLanguage } from '../utils/transliteration'
 import logImage from '../assets/log.png'
@@ -21,6 +22,7 @@ function TumanDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterTashkilot, setFilterTashkilot] = useState('')
+  const [selectedMurojaat, setSelectedMurojaat] = useState<Murojaat | null>(null)
 
   const translations = {
     uz: {
@@ -39,7 +41,9 @@ function TumanDashboard() {
       noData: 'Murojaatlar topilmadi',
       loading: 'Yuklanmoqda...',
       error: 'Xatolik yuz berdi',
-      totalAppeals: 'Jami murojaatlar'
+      totalAppeals: 'Jami murojaatlar',
+      close: 'Yopish',
+      details: 'Murojaat tafsilotlari'
     },
     'uz-cyrl': {
       title: 'Туман Админ Панел',
@@ -57,7 +61,9 @@ function TumanDashboard() {
       noData: 'Мурожаатлар топилмади',
       loading: 'Юкланмоқда...',
       error: 'Хатолик юз берди',
-      totalAppeals: 'Жами мурожаатлар'
+      totalAppeals: 'Жами мурожаатлар',
+      close: 'Ёпиш',
+      details: 'Мурожаат тафсилотлари'
     },
     ru: {
       title: 'Панель районного админа',
@@ -75,7 +81,9 @@ function TumanDashboard() {
       noData: 'Обращения не найдены',
       loading: 'Загрузка...',
       error: 'Произошла ошибка',
-      totalAppeals: 'Всего обращений'
+      totalAppeals: 'Всего обращений',
+      close: 'Закрыть',
+      details: 'Детали обращения'
     }
   }
 
@@ -193,13 +201,16 @@ function TumanDashboard() {
       </header>
 
       <div className="admin-content">
-        {/* Statistika */}
-        <div className="tuman-stats">
-          <div className="tuman-stat-card">
-            <span className="stat-label">{t.totalAppeals}</span>
-            <span className="stat-value">{murojaatlar.length}</span>
-          </div>
-        </div>
+        {/* Statistika va grafiklar */}
+        {!loading && murojaatlar.length > 0 && (
+          <Statistics
+            murojaatlar={murojaatlar}
+            language={language}
+            selectedTashkilot={filterTashkilot}
+            onTashkilotFilter={setFilterTashkilot}
+            hidePieChart={true}
+          />
+        )}
 
         <div className="filters-section">
           <div className="filter-group">
@@ -252,7 +263,7 @@ function TumanDashboard() {
                 </thead>
                 <tbody>
                   {filteredMurojaatlar.map((murojaat) => (
-                    <tr key={murojaat.id}>
+                    <tr key={murojaat.id} onClick={() => setSelectedMurojaat(murojaat)} className="clickable-row">
                       <td>{murojaat.fio}</td>
                       <td>{murojaat.telefon}</td>
                       <td>{murojaat.manzil}</td>
@@ -267,6 +278,51 @@ function TumanDashboard() {
           </div>
         )}
       </div>
+
+      {/* Murojaat tafsilotlari modali */}
+      {selectedMurojaat && (
+        <div className="modal-overlay" onClick={() => setSelectedMurojaat(null)}>
+          <div className="murojaat-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{(t as any).details}</h2>
+              <button className="modal-close-btn" onClick={() => setSelectedMurojaat(null)}>×</button>
+            </div>
+            <div className="modal-body">
+              <div className="detail-row">
+                <span className="detail-label">{t.fio}:</span>
+                <span className="detail-value">{selectedMurojaat.fio}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">{t.telefon}:</span>
+                <span className="detail-value">{selectedMurojaat.telefon}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">{t.tuman}:</span>
+                <span className="detail-value">{selectedMurojaat.tuman_shahar}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">{t.manzil}:</span>
+                <span className="detail-value">{selectedMurojaat.manzil}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">{t.tashkilot}:</span>
+                <span className="detail-value">{selectedMurojaat.tashkilot}</span>
+              </div>
+              <div className="detail-row">
+                <span className="detail-label">{t.sana}:</span>
+                <span className="detail-value">{formatDate(selectedMurojaat.created_at)}</span>
+              </div>
+              <div className="detail-row full-width">
+                <span className="detail-label">{t.mazmun}:</span>
+                <p className="detail-text">{selectedMurojaat.murojaat_mazmuni}</p>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="close-btn" onClick={() => setSelectedMurojaat(null)}>{(t as any).close}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -33,3 +33,11 @@ export interface TumanAdmin {
   created_at?: string
 }
 
+// Bosh admin uchun interface
+export interface MainAdmin {
+  id?: number
+  username: string
+  password: string
+  created_at?: string
+}
+

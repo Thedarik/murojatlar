@@ -9,11 +9,12 @@ interface StatisticsProps {
   language: 'uz' | 'uz-cyrl' | 'ru'
   selectedTashkilot: string
   onTashkilotFilter: (tashkilot: string) => void
+  hidePieChart?: boolean
 }
 
 const COLORS = ['#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe', '#eff6ff']
 
-function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilter }: StatisticsProps) {
+function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilter, hidePieChart = false }: StatisticsProps) {
   const translations = {
     uz: {
       all: 'Barchasi',
@@ -186,9 +187,9 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
       </div>
 
       {/* Grafiklar */}
-      <div className="charts-grid">
+      <div className={`charts-grid ${hidePieChart ? 'single-column' : ''}`}>
         {/* Line Chart - Kunlar kesimida */}
-        <div className="chart-card">
+        <div className={`chart-card ${hidePieChart ? 'full-width' : ''}`}>
           <h3 className="chart-title">{t.byDate}</h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={dailyStats}>
@@ -218,58 +219,60 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
         </div>
 
         {/* Pie Chart - Xududlar kesimida */}
-        <div className="chart-card">
-          <h3 className="chart-title">{t.byRegion}</h3>
-          <div className="pie-layout">
-            <div className="pie-chart">
-              <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                  <Pie
-                    data={regionStats}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={(props: any) => {
-                      const name = props.name || ''
-                      const payloadPercent = props.payload?.percent
-                      const percentValue = typeof payloadPercent === 'number'
-                        ? payloadPercent
-                        : (props.percent || 0) * 100
-                      if (percentValue < 5) return ''
-                      const formatter = new Intl.NumberFormat(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1
-                      })
-                      return `${name}: ${formatter.format(percentValue)}%`
-                    }}
-                    outerRadius={100}
-                    dataKey="value"
-                  >
-                    {regionStats.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+        {!hidePieChart && (
+          <div className="chart-card">
+            <h3 className="chart-title">{t.byRegion}</h3>
+            <div className="pie-layout">
+              <div className="pie-chart">
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie
+                      data={regionStats}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={(props: any) => {
+                        const name = props.name || ''
+                        const payloadPercent = props.payload?.percent
+                        const percentValue = typeof payloadPercent === 'number'
+                          ? payloadPercent
+                          : (props.percent || 0) * 100
+                        if (percentValue < 5) return ''
+                        const formatter = new Intl.NumberFormat(language === 'ru' ? 'ru-RU' : 'uz-UZ', {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1
+                        })
+                        return `${name}: ${formatter.format(percentValue)}%`
+                      }}
+                      outerRadius={100}
+                      dataKey="value"
+                    >
+                      {regionStats.map((_, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
 
-            <div className="pie-legend">
-              {regionStats.map((region, index) => (
-                <div key={region.name} className="pie-legend-item">
-                  <span
-                    className="pie-legend-dot"
-                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                  />
-                  <span className="pie-legend-name">{region.name}</span>
-                  <span className="pie-legend-percent">
-                    {region.percent.toFixed(1)}%
-                  </span>
-                </div>
-              ))}
+              <div className="pie-legend">
+                {regionStats.map((region, index) => (
+                  <div key={region.name} className="pie-legend-item">
+                    <span
+                      className="pie-legend-dot"
+                      style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                    />
+                    <span className="pie-legend-name">{region.name}</span>
+                    <span className="pie-legend-percent">
+                      {region.percent.toFixed(1)}%
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Status bo'yicha - Premium dizayn */}
         <div className="chart-card full-width status-section">

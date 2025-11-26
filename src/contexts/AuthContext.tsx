@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react'
+import { supabase } from '../config/supabase'
 
 interface AuthContextType {
   isAuthenticated: boolean
@@ -9,31 +10,36 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Oddiy admin login (production uchun Supabase Auth yoki boshqa xavfsiz yechim ishlatish kerak)
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'admin123' // Production uchun environment variable'dan o'qish kerak
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    // localStorage'dan autentifikatsiya holatini olish
     return localStorage.getItem('admin_authenticated') === 'true'
   })
   const [username, setUsername] = useState<string | null>(() => {
     return localStorage.getItem('admin_username')
   })
 
-  const login = async (username: string, password: string): Promise<boolean> => {
-    // Oddiy tekshirish (production uchun Supabase Auth ishlatish kerak)
-    if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+  const login = async (inputUsername: string, inputPassword: string): Promise<boolean> => {
+    try {
+      // Supabase'dan admin ma'lumotlarini tekshirish
+      const { data, error } = await supabase
+        .from('main_admin')
+        .select('*')
+        .eq('username', inputUsername)
+        .eq('password', inputPassword)
+        .single()
+
+      if (error || !data) {
+        return false
+      }
+
       setIsAuthenticated(true)
-      setUsername(username)
+      setUsername(inputUsername)
       localStorage.setItem('admin_authenticated', 'true')
-      localStorage.setItem('admin_username', username)
+      localStorage.setItem('admin_username', inputUsername)
       return true
+    } catch (err) {
+      return false
     }
-    return false
   }
 
   const logout = () => {

@@ -1,11 +1,16 @@
 import { useState, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
-import { supabase } from '../config/supabase'
 import './AdminLogin.css'
 import logImage from '../assets/log.png'
 
-function TumanLogin() {
+// Super admin credentials (keyinchalik Supabase ga ko'chirish mumkin)
+const SUPER_ADMIN = {
+  username: 'superadmin',
+  password: 'super123'
+}
+
+function SuperAdminLogin() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -16,8 +21,8 @@ function TumanLogin() {
 
   const translations = {
     uz: {
-      title: 'Tuman Admin',
-      subtitle: 'Tizimga kirish',
+      title: 'Super Admin',
+      subtitle: 'Bosh boshqaruv paneli',
       username: 'Login',
       password: 'Parol',
       login: 'Kirish',
@@ -25,8 +30,8 @@ function TumanLogin() {
       loading: 'Kirilmoqda...'
     },
     'uz-cyrl': {
-      title: 'Туман Админ',
-      subtitle: 'Тизимга кириш',
+      title: 'Супер Админ',
+      subtitle: 'Бош бошқарув панели',
       username: 'Логин',
       password: 'Парол',
       login: 'Кириш',
@@ -34,8 +39,8 @@ function TumanLogin() {
       loading: 'Кирилмоқда...'
     },
     ru: {
-      title: 'Районный админ',
-      subtitle: 'Вход в систему',
+      title: 'Супер Админ',
+      subtitle: 'Главная панель управления',
       username: 'Логин',
       password: 'Пароль',
       login: 'Войти',
@@ -52,23 +57,14 @@ function TumanLogin() {
     setLoading(true)
 
     try {
-      const { data, error: dbError } = await supabase
-        .from('tuman_admins')
-        .select('*')
-        .eq('username', username)
-        .eq('password', password)
-        .single()
-
-      if (dbError || !data) {
-        setError(t.error)
-      } else {
-        // Tuman ma'lumotlarini localStorage ga saqlash
-        localStorage.setItem('tumanAdmin', JSON.stringify({
-          tuman: data.tuman,
-          username: data.username,
+      if (username === SUPER_ADMIN.username && password === SUPER_ADMIN.password) {
+        localStorage.setItem('superAdmin', JSON.stringify({
+          username: username,
           isAuthenticated: true
         }))
-        navigate('/tuman/dashboard')
+        navigate('/super/dashboard')
+      } else {
+        setError(t.error)
       }
     } catch (err) {
       setError(t.error)
@@ -78,7 +74,7 @@ function TumanLogin() {
   }
 
   return (
-    <div className="admin-login-container">
+    <div className="admin-login-container super-admin-login">
       <div className="admin-login-box">
         <img src={logImage} alt="Logo" className="login-logo" />
         <h1>{t.title}</h1>
@@ -145,5 +141,5 @@ function TumanLogin() {
   )
 }
 
-export default TumanLogin
+export default SuperAdminLogin
 

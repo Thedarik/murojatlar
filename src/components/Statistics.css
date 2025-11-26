@@ -113,6 +113,10 @@
   grid-column: 1 / -1;
 }
 
+.charts-grid.single-column {
+  grid-template-columns: 1fr;
+}
+
 .chart-card {
   background: var(--color-surface-alt);
   padding: 20px;
