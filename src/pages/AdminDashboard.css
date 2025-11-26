@@ -43,6 +43,42 @@
   opacity: 0.9;
 }
 
+.tuman-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.tuman-stats {
+  margin-bottom: 24px;
+}
+
+.tuman-stat-card {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  padding: 24px 32px;
+  border-radius: 16px;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 10px 30px rgba(30, 58, 138, 0.3);
+}
+
+.stat-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+}
+
 .logout-button {
   background: var(--color-accent);
   color: var(--color-primary);

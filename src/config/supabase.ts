@@ -24,3 +24,12 @@ export interface Murojaat {
   updated_at?: string
 }
 
+// Tuman admin uchun interface
+export interface TumanAdmin {
+  id?: number
+  tuman: string
+  username: string
+  password: string
+  created_at?: string
+}
+
