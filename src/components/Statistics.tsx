@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, LabelList } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LabelList } from 'recharts'
 import { Murojaat } from '../config/supabase'
 import './Statistics.css'
 import { normalizeByLanguage } from '../utils/transliteration'
@@ -51,17 +51,17 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
   const t = translations[language]
   const locale = language === 'ru' ? 'ru-RU' : 'uz-UZ'
 
-  // Tashkilotlar ro'yxati
-  const tashkilotlar = useMemo(() => {
-    const unique = new Set<string>()
+  // Tashkilotlar ro'yxati va ularning soni
+  const tashkilotlarWithCount = useMemo(() => {
+    const counts: Record<string, number> = {}
     murojaatlar.forEach(m => {
       if (!m.tashkilot) return
       const normalized = normalizeByLanguage(m.tashkilot, language)
       if (normalized) {
-        unique.add(normalized)
+        counts[normalized] = (counts[normalized] || 0) + 1
       }
     })
-    return Array.from(unique)
+    return Object.entries(counts).map(([name, count]) => ({ name, count }))
   }, [murojaatlar, language])
 
   // Kunlar kesimida statistika
@@ -170,14 +170,16 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
           onClick={() => onTashkilotFilter('')}
         >
           {t.all}
+          <span className="filter-count">{murojaatlar.length}</span>
         </button>
-        {tashkilotlar.map(tashkilot => (
+        {tashkilotlarWithCount.map(({ name, count }) => (
           <button
-            key={tashkilot}
-            className={`filter-button ${selectedTashkilot === tashkilot ? 'active' : ''}`}
-            onClick={() => onTashkilotFilter(tashkilot)}
+            key={name}
+            className={`filter-button ${selectedTashkilot === name ? 'active' : ''}`}
+            onClick={() => onTashkilotFilter(name)}
           >
-            {tashkilot}
+            {name}
+            <span className="filter-count">{count}</span>
           </button>
         ))}
       </div>
@@ -221,6 +223,10 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
               />
             </LineChart>
           </ResponsiveContainer>
+          <div className="daily-summary">
+            <span className="daily-summary-label">24 soat ichida:</span>
+            <span className="daily-summary-value">{dailyStats[dailyStats.length - 1]?.count || 0} ta murojaat</span>
+          </div>
         </div>
 
         {/* Pie Chart - Xududlar kesimida */}
@@ -277,41 +283,50 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
           </div>
         </div>
 
-        {/* Bar Chart - Status bo'yicha */}
-        <div className="chart-card">
+        {/* Status bo'yicha - Premium dizayn */}
+        <div className="chart-card full-width status-section">
           <h3 className="chart-title">{t.byStatus}</h3>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart
-              data={statusStats}
-              layout="vertical"
-              margin={{ top: 10, right: 20, bottom: 0, left: 10 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-              <XAxis
-                type="number"
-                tick={{ fontSize: 12 }}
-                domain={[0, (dataMax: number) => Math.ceil(dataMax / 10) * 10]}
-              />
-              <YAxis
-                dataKey="name"
-                type="category"
-                tick={{ fontSize: 12 }}
-                width={120}
-              />
-              <Tooltip content={renderStatusTooltip} />
-              <Bar dataKey="value" barSize={30} radius={[0, 12, 12, 0]}>
-                {statusStats.map((_, index) => (
-                  <Cell key={`status-${index}`} fill={STATUS_COLORS[index % STATUS_COLORS.length]} />
-                ))}
-                <LabelList
-                  dataKey="percent"
-                  position="right"
-                  formatter={(value: any) => `${value}%`}
-                  style={{ fill: '#1f2937', fontWeight: 600 }}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="status-showcase">
+            {statusStats.map((item, index) => (
+              <div key={item.name} className={`status-tile ${index === 0 ? 'resolved' : 'pending'}`}>
+                <div className="status-glow"></div>
+                <div className="status-content">
+                  <div className="status-ring">
+                    <svg viewBox="0 0 100 100">
+                      <circle className="ring-bg" cx="50" cy="50" r="42" />
+                      <circle 
+                        className="ring-progress" 
+                        cx="50" 
+                        cy="50" 
+                        r="42"
+                        style={{ strokeDasharray: `${item.percent * 2.64} 264` }}
+                      />
+                    </svg>
+                    <div className="ring-center">
+                      <span className="ring-percent">{item.percent}%</span>
+                    </div>
+                  </div>
+                  <div className="status-info">
+                    <span className="status-label">{item.name}</span>
+                    <span className="status-count">{item.value} ta</span>
+                  </div>
+                </div>
+                <div className="status-decoration">
+                  {index === 0 ? (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                      <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

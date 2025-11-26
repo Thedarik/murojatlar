@@ -26,6 +26,24 @@
   color: var(--color-text);
   transition: all 0.2s;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.filter-count {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.filter-button.active .filter-count {
+  background: rgba(255,255,255,0.25);
 }
 
 .filter-button:hover {
@@ -91,11 +109,38 @@
   gap: 24px;
 }
 
+.chart-card.full-width {
+  grid-column: 1 / -1;
+}
+
 .chart-card {
   background: var(--color-surface-alt);
   padding: 20px;
   border-radius: 8px;
   border: 1px solid var(--color-border);
+}
+
+/* 24 soat summary */
+.daily-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  border-radius: 10px;
+  color: #fff;
+}
+
+.daily-summary-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.daily-summary-value {
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .chart-title {
@@ -215,5 +260,169 @@
 .tooltip-value {
   font-size: 12px;
   opacity: 0.85;
+}
+
+/* Status Section - Premium dizayn */
+.status-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  border: none;
+  padding: 32px;
+}
+
+.status-section .chart-title {
+  color: #f1f5f9;
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+
+.status-showcase {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+}
+
+.status-tile {
+  position: relative;
+  background: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 32px;
+  border: 1px solid rgba(255,255,255,0.1);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.status-tile:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.status-tile.resolved {
+  --tile-color: #10b981;
+  --tile-glow: rgba(16, 185, 129, 0.4);
+}
+
+.status-tile.pending {
+  --tile-color: #f59e0b;
+  --tile-glow: rgba(245, 158, 11, 0.4);
+}
+
+.status-glow {
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, var(--tile-glow) 0%, transparent 70%);
+  opacity: 0.6;
+  transition: opacity 0.4s;
+}
+
+.status-tile:hover .status-glow {
+  opacity: 1;
+}
+
+.status-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.status-ring {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+}
+
+.status-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.1);
+  stroke-width: 8;
+}
+
+.ring-progress {
+  fill: none;
+  stroke: var(--tile-color);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 1s ease-out;
+  filter: drop-shadow(0 0 8px var(--tile-glow));
+}
+
+.ring-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.ring-percent {
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-label {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.5px;
+}
+
+.status-count {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, var(--tile-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.status-decoration {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  color: var(--tile-color);
+  opacity: 0.4;
+  transition: all 0.3s;
+}
+
+.status-tile:hover .status-decoration {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+@media (max-width: 640px) {
+  .status-showcase {
+    grid-template-columns: 1fr;
+  }
+  
+  .status-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .status-info {
+    align-items: center;
+  }
 }
 
