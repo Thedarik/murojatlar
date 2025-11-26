@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../contexts/LanguageContext'
 import { supabase, Murojaat, DarajaType, HolatType } from '../config/supabase'
 import './AdminDashboard.css'
-import { normalizeByLanguage } from '../utils/transliteration'
 import logImage from '../assets/log.png'
 
 interface TumanAdminData {
