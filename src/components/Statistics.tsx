@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LabelList } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts'
 import { Murojaat } from '../config/supabase'
 import './Statistics.css'
 import { normalizeByLanguage } from '../utils/transliteration'
@@ -12,7 +12,6 @@ interface StatisticsProps {
 }
 
 const COLORS = ['#1e3a8a', '#3b82f6', '#60a5fa', '#93c5fd', '#bfdbfe', '#dbeafe', '#eff6ff']
-const STATUS_COLORS = ['#1e3a8a', '#3b82f6', '#93c5fd']
 
 function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilter }: StatisticsProps) {
   const translations = {
@@ -149,17 +148,6 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
       percent: Math.round((item.value / total) * 100)
     }))
   }, [murojaatlar, t])
-
-  const renderStatusTooltip = ({ active, payload }: any) => {
-    if (!active || !payload?.length) return null
-    const data = payload[0].payload
-    return (
-      <div className="custom-tooltip">
-        <span className="tooltip-title">{data.name}</span>
-        <span className="tooltip-value">{data.value} ({data.percent}%)</span>
-      </div>
-    )
-  }
 
   return (
     <div className="statistics-container">
