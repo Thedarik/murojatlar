@@ -272,11 +272,42 @@
   background: #ffffff;
   border-radius: 16px;
   width: 90%;
-  max-width: 600px;
-  max-height: 90vh;
+  max-width: 650px;
+  max-height: 85vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(85vh - 140px);
+  display: flex;
+  gap: 24px;
+}
+
+.modal-left {
+  flex: 1;
+}
+
+.modal-right {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .modal-body {
+    flex-direction: column;
+  }
+  
+  .modal-right {
+    width: 100%;
+  }
 }
 
 .modal-header {
@@ -307,12 +338,6 @@
 
 .modal-close-btn:hover {
   color: #000;
-}
-
-.modal-body {
-  padding: 24px;
-  overflow-y: auto;
-  flex: 1;
 }
 
 .detail-row {
@@ -379,6 +404,242 @@
 
 .close-btn:hover {
   background: #1e40af;
+}
+
+/* Daraja section */
+.daraja-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.daraja-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.daraja-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.daraja-btn.oddiy {
+  color: #059669;
+}
+
+.daraja-btn.oddiy:hover,
+.daraja-btn.oddiy.active {
+  background: #059669;
+  border-color: #059669;
+  color: #fff;
+}
+
+.daraja-btn.muhim {
+  color: #d97706;
+}
+
+.daraja-btn.muhim:hover,
+.daraja-btn.muhim.active {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
+}
+
+.daraja-btn.zudlik {
+  color: #dc2626;
+}
+
+.daraja-btn.zudlik:hover,
+.daraja-btn.zudlik.active {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+/* Daraja badge in table */
+.daraja-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.daraja-badge.oddiy {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.daraja-badge.muhim {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.daraja-badge.zudlik {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Holat badges */
+.holat-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.holat-badge.yangi {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.holat-badge.amalda {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.holat-badge.tugallangan {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Holat section */
+.holat-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e5e5;
+}
+
+.holat-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.holat-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+  position: relative;
+  z-index: 10;
+}
+
+.holat-btn.yangi {
+  color: #1d4ed8;
+}
+
+.holat-btn.yangi:hover,
+.holat-btn.yangi.active {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.holat-btn.amalda {
+  color: #d97706;
+}
+
+.holat-btn.amalda:hover,
+.holat-btn.amalda.active {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
+}
+
+.holat-btn.tugallangan {
+  color: #059669;
+}
+
+.holat-btn.tugallangan:hover,
+.holat-btn.tugallangan.active {
+  background: #059669;
+  border-color: #059669;
+  color: #fff;
+}
+
+/* Action sections for modal right side */
+.action-section {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e5e5;
+}
+
+.action-label {
+  display: block;
+  font-weight: 600;
+  color: #374151;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+.action-buttons.vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-buttons.vertical .daraja-btn,
+.action-buttons.vertical .holat-btn {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+/* Dashboard actions */
+.dashboard-actions {
+  margin-bottom: 24px;
+}
+
+.view-murojaatlar-btn {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+}
+
+.view-murojaatlar-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(30, 58, 138, 0.4);
+}
+
+.back-button {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.5);
 }
 
 

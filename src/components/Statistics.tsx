@@ -137,13 +137,26 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
     ]
   }, [murojaatlar.length, t.total, locale])
 
-  // Status bo'yicha statistika (hozircha barcha murojaatlar "jarayonda" deb hisoblanadi)
+  // Status bo'yicha statistika - haqiqiy holat maydonidan
   const statusStats = useMemo(() => {
     const total = murojaatlar.length || 1
-    // Keyinchalik status maydoni qo'shilganda, bu yerda real statistika bo'ladi
+    
+    // Haqiqiy holat bo'yicha hisoblash
+    let resolved = 0 // tugallangan
+    let inProgress = 0 // yangi + amalda
+    
+    murojaatlar.forEach(m => {
+      if (m.holat === 'tugallangan') {
+        resolved++
+      } else {
+        // yangi, amalda yoki belgilanmagan - jarayonda
+        inProgress++
+      }
+    })
+    
     return [
-      { name: t.resolved, value: Math.floor(total * 0.7) }, // 70% hal qilingan deb taxmin qilamiz
-      { name: t.inProgress, value: Math.ceil(total * 0.3) } // 30% jarayonda
+      { name: t.resolved, value: resolved },
+      { name: t.inProgress, value: inProgress }
     ].map(item => ({
       ...item,
       percent: Math.round((item.value / total) * 100)

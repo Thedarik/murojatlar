@@ -11,6 +11,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
+// Daraja turlari
+export type DarajaType = 'oddiy' | 'muhim' | 'zudlik'
+
+// Holat turlari
+export type HolatType = 'yangi' | 'amalda' | 'tugallangan'
+
 // Database types
 export interface Murojaat {
   id?: number
@@ -20,6 +26,8 @@ export interface Murojaat {
   manzil: string
   murojaat_mazmuni: string
   tashkilot: string
+  daraja?: DarajaType
+  holat?: HolatType
   created_at?: string
   updated_at?: string
 }
