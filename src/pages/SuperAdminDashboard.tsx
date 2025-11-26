@@ -349,20 +349,20 @@ function SuperAdminDashboard() {
                     <div className="admin-card-edit">
                       <input
                         type="text"
-                        value={editingAdmin.tuman}
-                        onChange={(e) => setEditingAdmin({ ...editingAdmin, tuman: e.target.value })}
+                        value={editingAdmin?.tuman || ''}
+                        onChange={(e) => editingAdmin && setEditingAdmin({ ...editingAdmin, tuman: e.target.value })}
                         placeholder={t.tuman}
                       />
                       <input
                         type="text"
-                        value={editingAdmin.username}
-                        onChange={(e) => setEditingAdmin({ ...editingAdmin, username: e.target.value })}
+                        value={editingAdmin?.username || ''}
+                        onChange={(e) => editingAdmin && setEditingAdmin({ ...editingAdmin, username: e.target.value })}
                         placeholder={t.username}
                       />
                       <input
                         type="text"
-                        value={editingAdmin.password}
-                        onChange={(e) => setEditingAdmin({ ...editingAdmin, password: e.target.value })}
+                        value={editingAdmin?.password || ''}
+                        onChange={(e) => editingAdmin && setEditingAdmin({ ...editingAdmin, password: e.target.value })}
                         placeholder={t.password}
                       />
                       <div className="edit-actions">
