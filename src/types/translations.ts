@@ -83,6 +83,7 @@ export const translations: Record<Language, Translations> = {
       'Arnasoy',
       'Baxmal',
       'Do\'stlik',
+      'G\'allarol',
       'Paxtakor',
       'Zarbdor',
       'Zafarobot',
@@ -91,16 +92,18 @@ export const translations: Record<Language, Translations> = {
       'Forish',
       'Mirzacho\'l',
       'Jizzax Shahar',
-      'Jizzax viloyati'
+      'Jizzax viloyati',
+      'Yangiobod'
     ],
     tashkilotlar: [
-      'jizzax suv ta\'minoti AJ',
-      'Ekalogiya boshqarmasi',
+      'Jizzax suv ta\'minoti AJ',
+      'Issiqlik manbai MCHJ',
+      'HET korxonasi',
       'Qurilish va uy-joy kommunal xo\'jaligi bosh boshqarmasi',
-      'XET korxonasi',
-      'Ijtimoiy soha',
-      'issiqlik Manbai MCHJ',
+      'Hududgaz Jizzax GTF',
+      'Ekologiya boshqarmasi',
       'Ko\'mir ta\'minoti',
+      'Ijtimoiy soha',
       'Boshqalar'
     ]
   },
@@ -145,6 +148,7 @@ export const translations: Record<Language, Translations> = {
       'Арнасай',
       'Бахмал',
       'Дустлик',
+      'Галлаорол',
       'Пахтакор',
       'Зарбдор',
       'Зафаробот',
@@ -153,16 +157,18 @@ export const translations: Record<Language, Translations> = {
       'Фариш',
       'Мирзачўль',
       'Жизак Шахар',
-      'Жизакская область'
+      'Жизакская область',
+      'Янгиобод'
     ],
     tashkilotlar: [
       'Жизак сув таъминоти АЖ',
-      'Экология бошқармаси',
-      'Бош бошқарма қурилиш ва уй-жой коммунал хўжалиги',
+      'Иссиқлик манбаи МЧЖ',
       'ХЕТ корхонаси',
-      'Ижтимоий соҳа',
-      'Иссиқлик Манбаи МЧЖ',
+      'Бош бошқарма қурилиш ва уй-жой коммунал хўжалиги',
+      'Худудгаз Жизак ГТФ',
+      'Экология бошқармаси',
       'Кўмир таъминоти',
+      'Ижтимоий соҳа',
       'Бошқалар'
     ]
   },
@@ -207,6 +213,7 @@ export const translations: Record<Language, Translations> = {
       'Арнасой',
       'Бахмал',
       'Дўстлик',
+      'Ғаллаорол',
       'Пахтакор',
       'Зарбдор',
       'Зафаробот',
@@ -215,16 +222,18 @@ export const translations: Record<Language, Translations> = {
       'Фариш',
       'Мирзачўль',
       'Жиззах Шаҳар',
-      'Жиззах вилояти'
+      'Жиззах вилояти',
+      'Янгиобод'
     ],
     tashkilotlar: [
-      'жиззах сув таъминоти АЖ',
-      'Экалогия бошқармаси',
-      'Қурилиш ва уй-жой коммунал хўжалиги бош бошқармаси',
+      'Жиззах сув таъминоти АЖ',
+      'Иссиқлик манбаи МЧЖ',
       'ХЕТ корхонаси',
-      'Ижтимоий соҳа',
-      'иссиқлик Манбаи МЧЖ',
+      'Қурилиш ва уй-жой коммунал хўжалиги бош бошқармаси',
+      'Худудгаз Жиззах ГТФ',
+      'Экология бошқармаси',
       'Кўмир таъминоти',
+      'Ижтимоий соҳа',
       'Бошқалар'
     ]
   }

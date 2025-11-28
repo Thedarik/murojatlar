@@ -22,8 +22,8 @@ function AdminDashboard() {
       title: 'Admin Panel - Murojaatlar',
       logout: 'Chiqish',
       search: 'Qidirish...',
-      filterTuman: 'Tuman bo\'yicha',
-      filterTashkilot: 'Tashkilot bo\'yicha',
+      filterTuman: 'Hududlar kesimida',
+      filterTashkilot: 'Tashkilotlar kesimida',
       all: 'Barchasi',
       fio: 'F.I.SH',
       telefon: 'Telefon',
@@ -44,8 +44,8 @@ function AdminDashboard() {
       title: 'Админ Панел - Мурожаатлар',
       logout: 'Чиқиш',
       search: 'Қидириш...',
-      filterTuman: 'Туман бўйича',
-      filterTashkilot: 'Ташкилот бўйича',
+      filterTuman: 'Ҳудудлар кесимида',
+      filterTashkilot: 'Ташкилотлар кесимида',
       all: 'Барчаси',
       fio: 'Ф.И.Ш',
       telefon: 'Телефон',
@@ -66,8 +66,8 @@ function AdminDashboard() {
       title: 'Панель администратора - Обращения',
       logout: 'Выход',
       search: 'Поиск...',
-      filterTuman: 'По району',
-      filterTashkilot: 'По организации',
+      filterTuman: 'По регионам',
+      filterTashkilot: 'По организациям',
       all: 'Все',
       fio: 'Ф.И.О',
       telefon: 'Телефон',
@@ -217,7 +217,7 @@ function AdminDashboard() {
               onChange={(e) => setFilterTuman(e.target.value)}
               className="filter-select"
             >
-              <option value="">{t.filterTuman} - {t.all}</option>
+              <option value="">{t.filterTuman}</option>
               {tumanlar.map(tuman => (
                 <option key={tuman} value={tuman}>{tuman}</option>
               ))}
@@ -230,7 +230,7 @@ function AdminDashboard() {
               onChange={(e) => setFilterTashkilot(e.target.value)}
               className="filter-select"
             >
-              <option value="">{t.filterTashkilot} - {t.all}</option>
+              <option value="">{t.filterTashkilot}</option>
               {tashkilotlar.map(tashkilot => (
                 <option key={tashkilot} value={tashkilot}>{tashkilot}</option>
               ))}

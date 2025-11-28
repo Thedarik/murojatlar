@@ -19,32 +19,38 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
     uz: {
       all: 'Barchasi',
       byDate: 'Kunlar kesimida',
-      byRegion: 'Xududlar kesimida',
-      byStatus: 'Holat bo\'yicha',
+      byRegion: 'Hududlar kesimida',
+      byStatus: 'Murojaatlarning ijro holati',
       total: 'Jami',
       inProgress: 'Jarayonda',
       resolved: 'Hal qilindi',
-      sortFilters: 'Filtrlarni saralash'
+      sortFilters: 'Filtrlarni saralash',
+      last24Hours: '24 soat ichida',
+      appeals: 'ta murojaat'
     },
     'uz-cyrl': {
       all: 'Барчаси',
       byDate: 'Кунлар кесимида',
-      byRegion: 'Худудлар кесимида',
-      byStatus: 'Ҳолат бўйича',
+      byRegion: 'Ҳудудлар кесимида',
+      byStatus: 'Мурожаатларнинг ижро ҳолати',
       total: 'Жами',
       inProgress: 'Жараёнда',
       resolved: 'Ҳал қилинди',
-      sortFilters: 'Филтрларни саралаш'
+      sortFilters: 'Филтрларни саралаш',
+      last24Hours: '24 соат ичида',
+      appeals: 'та мурожаат'
     },
     ru: {
       all: 'Все',
       byDate: 'По дням',
       byRegion: 'По регионам',
-      byStatus: 'По статусу',
+      byStatus: 'Статус исполнения обращений',
       total: 'Всего',
       inProgress: 'В процессе',
       resolved: 'Решено',
-      sortFilters: 'Сортировать фильтры'
+      sortFilters: 'Сортировать фильтры',
+      last24Hours: 'За 24 часа',
+      appeals: 'обращений'
     }
   }
 
@@ -226,8 +232,8 @@ function Statistics({ murojaatlar, language, selectedTashkilot, onTashkilotFilte
             </LineChart>
           </ResponsiveContainer>
           <div className="daily-summary">
-            <span className="daily-summary-label">24 soat ichida:</span>
-            <span className="daily-summary-value">{dailyStats[dailyStats.length - 1]?.count || 0} ta murojaat</span>
+            <span className="daily-summary-label">{t.last24Hours}:</span>
+            <span className="daily-summary-value">{dailyStats[dailyStats.length - 1]?.count || 0} {t.appeals}</span>
           </div>
         </div>
 

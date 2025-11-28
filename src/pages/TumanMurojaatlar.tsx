@@ -29,7 +29,7 @@ function TumanMurojaatlar() {
       logout: 'Chiqish',
       back: 'Orqaga',
       search: 'Qidirish...',
-      filterTashkilot: 'Tashkilot bo\'yicha',
+      filterTashkilot: 'Tashkilotlar kesimida',
       all: 'Barchasi',
       fio: 'F.I.SH',
       telefon: 'Telefon',
@@ -60,7 +60,7 @@ function TumanMurojaatlar() {
       logout: 'Чиқиш',
       back: 'Орқага',
       search: 'Қидириш...',
-      filterTashkilot: 'Ташкилот бўйича',
+      filterTashkilot: 'Ташкилотлар кесимида',
       all: 'Барчаси',
       fio: 'Ф.И.Ш',
       telefon: 'Телефон',
@@ -91,7 +91,7 @@ function TumanMurojaatlar() {
       logout: 'Выход',
       back: 'Назад',
       search: 'Поиск...',
-      filterTashkilot: 'По организации',
+      filterTashkilot: 'По организациям',
       all: 'Все',
       fio: 'Ф.И.О',
       telefon: 'Телефон',
@@ -182,14 +182,14 @@ function TumanMurojaatlar() {
 
   // Barcha tashkilotlar ro'yxati
   const allTashkilotlar = [
-    "Jizzax Suv Ta'minoti AJ",
-    "Boshqarmasining ekologiyasi",
+    "Jizzax suv ta'minoti AJ",
+    "Issiqlik manbai MCHJ",
+    "HET korxonasi",
     "Qurilish va uy-joy kommunal xo'jaligi bosh boshqarmasi",
-    "XET korxonasi",
-    "Xudud gaz Jizzax",
-    "Ijtimoiy soha",
-    "Issiqlik Manbai MCHJ",
+    "Hududgaz Jizzax GTF",
+    "Ekologiya boshqarmasi",
     "Ko'mir ta'minoti",
+    "Ijtimoiy soha",
     "Boshqalar"
   ]
 
@@ -352,7 +352,7 @@ function TumanMurojaatlar() {
               onChange={(e) => setFilterHolat(e.target.value)}
               className="filter-select"
             >
-              <option value="">{t.filterHolat} - {t.all}</option>
+              <option value="">{t.filterHolat}</option>
               <option value="yangi">{t.yangi}</option>
               <option value="amalda">{t.amalda}</option>
               <option value="tugallangan">{t.tugallangan}</option>
