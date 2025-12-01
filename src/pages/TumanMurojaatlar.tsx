@@ -22,6 +22,8 @@ function TumanMurojaatlar() {
   const [filterTashkilot, setFilterTashkilot] = useState('')
   const [filterHolat, setFilterHolat] = useState<string>('')
   const [selectedMurojaat, setSelectedMurojaat] = useState<Murojaat | null>(null)
+  const [editingDate, setEditingDate] = useState(false)
+  const [dateValue, setDateValue] = useState('')
 
   const translations = {
     uz: {
@@ -53,7 +55,10 @@ function TumanMurojaatlar() {
       amalda: 'Amalda',
       tugallangan: 'Tugallangan',
       setHolat: 'Holatni belgilash',
-      filterHolat: 'Holat bo\'yicha'
+      filterHolat: 'Holat bo\'yicha',
+      editDate: 'Sanani tahrirlash',
+      saveDate: 'Saqlash',
+      cancelDate: 'Bekor qilish'
     },
     'uz-cyrl': {
       title: 'Мурожаатлар',
@@ -84,7 +89,10 @@ function TumanMurojaatlar() {
       amalda: 'Амалда',
       tugallangan: 'Тугалланган',
       setHolat: 'Ҳолатни белгилаш',
-      filterHolat: 'Ҳолат бўйича'
+      filterHolat: 'Ҳолат бўйича',
+      editDate: 'Санани таҳрирлаш',
+      saveDate: 'Сақлаш',
+      cancelDate: 'Бекор қилиш'
     },
     ru: {
       title: 'Обращения',
@@ -115,7 +123,10 @@ function TumanMurojaatlar() {
       amalda: 'В работе',
       tugallangan: 'Завершено',
       setHolat: 'Установить статус',
-      filterHolat: 'По статусу'
+      filterHolat: 'По статусу',
+      editDate: 'Редактировать дату',
+      saveDate: 'Сохранить',
+      cancelDate: 'Отмена'
     }
   }
 
@@ -289,6 +300,69 @@ function TumanMurojaatlar() {
     return <span className={`holat-badge ${displayHolat}`}>{labels[displayHolat]}</span>
   }
 
+  // Sanani datetime-local formatiga o'tkazish
+  const formatDateForInput = (dateString: string | undefined) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ''
+    // UTC vaqtni local vaqtga o'tkazish
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  }
+
+  // Datetime-local formatdan ISO formatga o'tkazish
+  const parseDateFromInput = (dateTimeLocal: string) => {
+    if (!dateTimeLocal) return null
+    const date = new Date(dateTimeLocal)
+    if (isNaN(date.getTime())) return null
+    return date.toISOString()
+  }
+
+  const handleDateChange = async () => {
+    if (!selectedMurojaat?.id) return
+
+    const newDate = parseDateFromInput(dateValue)
+    if (!newDate) return
+
+    // Optimistic update
+    const oldDate = selectedMurojaat.created_at
+    setSelectedMurojaat({ ...selectedMurojaat, created_at: newDate })
+    setMurojaatlar(murojaatlar.map(m =>
+      m.id === selectedMurojaat.id ? { ...m, created_at: newDate } : m
+    ))
+    setEditingDate(false)
+
+    // Supabase'ga yuborish
+    try {
+      const { error } = await supabase
+        .from('murojaatlar')
+        .update({ created_at: newDate })
+        .eq('id', selectedMurojaat.id)
+
+      if (error) throw error
+    } catch (err) {
+      console.error('Sanani yangilashda xatolik:', err)
+      // Xatolik bo'lsa, eski holatga qaytarish
+      if (selectedMurojaat) {
+        setSelectedMurojaat({ ...selectedMurojaat, created_at: oldDate })
+        setMurojaatlar(murojaatlar.map(m =>
+          m.id === selectedMurojaat.id ? { ...m, created_at: oldDate } : m
+        ))
+      }
+    }
+  }
+
+  // Modal ochilganda sana input uchun tayyorlash
+  useEffect(() => {
+    if (selectedMurojaat && !editingDate) {
+      setDateValue(formatDateForInput(selectedMurojaat.created_at))
+    }
+  }, [selectedMurojaat, editingDate])
+
   if (!tumanAdmin) {
     return <div className="loading-message">{t.loading}</div>
   }
@@ -435,7 +509,44 @@ function TumanMurojaatlar() {
                 </div>
                 <div className="detail-row">
                   <span className="detail-label">{t.sana}:</span>
-                  <span className="detail-value">{formatDate(selectedMurojaat.created_at)}</span>
+                  {editingDate ? (
+                    <div className="date-edit-container">
+                      <input
+                        type="datetime-local"
+                        value={dateValue}
+                        onChange={(e) => setDateValue(e.target.value)}
+                        className="date-input"
+                      />
+                      <div className="date-edit-actions">
+                        <button
+                          className="save-date-btn"
+                          onClick={handleDateChange}
+                        >
+                          {t.saveDate}
+                        </button>
+                        <button
+                          className="cancel-date-btn"
+                          onClick={() => {
+                            setEditingDate(false)
+                            setDateValue(formatDateForInput(selectedMurojaat.created_at))
+                          }}
+                        >
+                          {t.cancelDate}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="date-display-container">
+                      <span className="detail-value">{formatDate(selectedMurojaat.created_at)}</span>
+                      <button
+                        className="edit-date-btn"
+                        onClick={() => setEditingDate(true)}
+                        title={t.editDate}
+                      >
+                        ✏️
+                      </button>
+                    </div>
+                  )}
                 </div>
                 <div className="detail-row full-width">
                   <span className="detail-label">{t.mazmun}:</span>

@@ -16,6 +16,8 @@ function AdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterTuman, setFilterTuman] = useState('')
   const [filterTashkilot, setFilterTashkilot] = useState('')
+  const [editingDateId, setEditingDateId] = useState<number | null>(null)
+  const [dateValue, setDateValue] = useState('')
 
   const translations = {
     uz: {
@@ -38,7 +40,10 @@ function AdminDashboard() {
       loading: 'Yuklanmoqda...',
       confirmDelete: 'Bu murojaatni o\'chirishni xohlaysizmi?',
       deleted: 'Murojaat o\'chirildi',
-      error: 'Xatolik yuz berdi'
+      error: 'Xatolik yuz berdi',
+      editDate: 'Sanani tahrirlash',
+      saveDate: 'Saqlash',
+      cancelDate: 'Bekor qilish'
     },
     'uz-cyrl': {
       title: 'Админ Панел - Мурожаатлар',
@@ -60,7 +65,10 @@ function AdminDashboard() {
       loading: 'Юкланмоқда...',
       confirmDelete: 'Бу мурожаатни ўчиришни хоҳлайсизми?',
       deleted: 'Мурожаат ўчирилди',
-      error: 'Хатолик юз берди'
+      error: 'Хатолик юз берди',
+      editDate: 'Санани таҳрирлаш',
+      saveDate: 'Сақлаш',
+      cancelDate: 'Бекор қилиш'
     },
     ru: {
       title: 'Панель администратора - Обращения',
@@ -82,7 +90,10 @@ function AdminDashboard() {
       loading: 'Загрузка...',
       confirmDelete: 'Вы уверены, что хотите удалить это обращение?',
       deleted: 'Обращение удалено',
-      error: 'Произошла ошибка'
+      error: 'Произошла ошибка',
+      editDate: 'Редактировать дату',
+      saveDate: 'Сохранить',
+      cancelDate: 'Отмена'
     }
   }
 
@@ -172,6 +183,67 @@ function AdminDashboard() {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  // Sanani datetime-local formatiga o'tkazish
+  const formatDateForInput = (dateString: string | undefined) => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    const hours = String(date.getHours()).padStart(2, '0')
+    const minutes = String(date.getMinutes()).padStart(2, '0')
+    return `${year}-${month}-${day}T${hours}:${minutes}`
+  }
+
+  // Datetime-local formatdan ISO formatga o'tkazish
+  const parseDateFromInput = (dateTimeLocal: string) => {
+    if (!dateTimeLocal) return null
+    const date = new Date(dateTimeLocal)
+    if (isNaN(date.getTime())) return null
+    return date.toISOString()
+  }
+
+  const handleDateEdit = (murojaat: Murojaat) => {
+    setEditingDateId(murojaat.id || null)
+    setDateValue(formatDateForInput(murojaat.created_at))
+  }
+
+  const handleDateSave = async (murojaatId: number) => {
+    const newDate = parseDateFromInput(dateValue)
+    if (!newDate) return
+
+    const oldMurojaat = murojaatlar.find(m => m.id === murojaatId)
+    if (!oldMurojaat) return
+
+    // Optimistic update
+    setMurojaatlar(murojaatlar.map(m =>
+      m.id === murojaatId ? { ...m, created_at: newDate } : m
+    ))
+    setEditingDateId(null)
+
+    // Supabase'ga yuborish
+    try {
+      const { error } = await supabase
+        .from('murojaatlar')
+        .update({ created_at: newDate })
+        .eq('id', murojaatId)
+
+      if (error) throw error
+    } catch (err) {
+      console.error('Sanani yangilashda xatolik:', err)
+      // Xatolik bo'lsa, eski holatga qaytarish
+      setMurojaatlar(murojaatlar.map(m =>
+        m.id === murojaatId ? { ...m, created_at: oldMurojaat.created_at } : m
+      ))
+    }
+  }
+
+  const handleDateCancel = () => {
+    setEditingDateId(null)
+    setDateValue('')
   }
 
   return (
@@ -273,7 +345,41 @@ function AdminDashboard() {
                       <td>{murojaat.manzil}</td>
                       <td className="mazmun-cell">{murojaat.murojaat_mazmuni}</td>
                       <td>{murojaat.tashkilot}</td>
-                      <td>{formatDate(murojaat.created_at)}</td>
+                      <td>
+                        {editingDateId === murojaat.id ? (
+                          <div className="date-edit-inline">
+                            <input
+                              type="datetime-local"
+                              value={dateValue}
+                              onChange={(e) => setDateValue(e.target.value)}
+                              className="date-input-inline"
+                              autoFocus
+                            />
+                            <div className="date-edit-actions-inline">
+                              <button
+                                className="save-date-btn-inline"
+                                onClick={() => murojaat.id && handleDateSave(murojaat.id)}
+                                title={t.saveDate}
+                              >
+                                ✓
+                              </button>
+                              <button
+                                className="cancel-date-btn-inline"
+                                onClick={handleDateCancel}
+                                title={t.cancelDate}
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="date-display-inline">
+                            <span onClick={() => handleDateEdit(murojaat)} className="date-clickable" title={t.editDate}>
+                              {formatDate(murojaat.created_at)}
+                            </span>
+                          </div>
+                        )}
+                      </td>
                       <td>
                         <button
                           onClick={() => murojaat.id && handleDelete(murojaat.id)}

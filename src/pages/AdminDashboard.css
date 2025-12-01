@@ -514,6 +514,161 @@
   color: #059669;
 }
 
+/* Date edit styles */
+.date-display-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.edit-date-btn {
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-date-btn:hover {
+  background: #e5e5e5;
+  border-color: #ccc;
+}
+
+.date-edit-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.date-input {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+}
+
+.date-edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-date-btn,
+.cancel-date-btn {
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.save-date-btn {
+  background: #1e3a8a;
+  color: #fff;
+}
+
+.save-date-btn:hover {
+  background: #1e40af;
+}
+
+.cancel-date-btn {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.cancel-date-btn:hover {
+  background: #e5e5e5;
+}
+
+/* Inline date edit styles for table */
+.date-clickable {
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  display: inline-block;
+}
+
+.date-clickable:hover {
+  background: #f0f0f0;
+}
+
+.date-display-inline {
+  display: flex;
+  align-items: center;
+}
+
+.date-edit-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-input-inline {
+  padding: 4px 8px;
+  border: 1px solid #1e3a8a;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 160px;
+}
+
+.date-input-inline:focus {
+  outline: none;
+  border-color: #1e40af;
+}
+
+.date-edit-actions-inline {
+  display: flex;
+  gap: 4px;
+}
+
+.save-date-btn-inline,
+.cancel-date-btn-inline {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.save-date-btn-inline {
+  background: #1e3a8a;
+  color: #fff;
+}
+
+.save-date-btn-inline:hover {
+  background: #1e40af;
+}
+
+.cancel-date-btn-inline {
+  background: #f0f0f0;
+  color: #555;
+}
+
+.cancel-date-btn-inline:hover {
+  background: #e5e5e5;
+}
+
 /* Holat section */
 .holat-section {
   margin-top: 16px;
