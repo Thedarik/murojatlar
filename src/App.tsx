@@ -7,6 +7,7 @@ import TumanDashboard from './pages/TumanDashboard'
 import TumanMurojaatlar from './pages/TumanMurojaatlar'
 import SuperAdminLogin from './pages/SuperAdminLogin'
 import SuperAdminDashboard from './pages/SuperAdminDashboard'
+import PublicDashboard from './pages/PublicDashboard'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/tuman/murojaatlar" element={<TumanMurojaatlar />} />
         <Route path="/super/login" element={<SuperAdminLogin />} />
         <Route path="/super/dashboard" element={<SuperAdminDashboard />} />
+        <Route path="/admin12/dashboard" element={<PublicDashboard />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
